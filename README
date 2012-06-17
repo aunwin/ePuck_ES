@@ -1,0 +1,5 @@
+This is a project for our embedded systems course at University Rostock.
+We need to implement a convenient remote control for a little robot, the ePuck.
+The communication should be via Bluetooth.
+
+contact at simeon.wiedenmann [at] web de
