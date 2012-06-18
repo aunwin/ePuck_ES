@@ -3,13 +3,8 @@ To does die noch anstehen:
 
 -Flo Zugang verschaffen
 
--forken verstehen
--https://help.github.com/articles/fork-a-repo
--> forken ist dafür da, aus einem Projekt ein ganz neues zu machen. Brauchen wir also nicht!
-
-das Zeug bekommt man runter in dem man ein neues Git Verzeichnis anlegt, aber nicht über "git init"
-sondern über git clone https://...
-
+-neues Git Verzeichnis anlegen vom remote repos aus
+git clone http://github.com/aunwin/...
 
 -Projektziel festlegen
 
