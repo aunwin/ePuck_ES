@@ -85,8 +85,18 @@ int main(int argc, char **argv) {
 	sprintf(input,"command$>");
 	buf=readline(input);
 	while(strncmp(buf,"exit",4)){
-		send(s, buf, strlen(buf), 0);
-		send(s, "\n", 1, 0);
+		status = send(s, buf, strlen(buf), 0);
+		if (status < 0) {
+			perror("error:send()\n");
+		} else {
+			printf("status code: %d\n",status);
+		}		
+		status = send(s, "\n", 1, 0);
+		if (status < 0) {
+			perror("error:send()\n");
+		} else {
+			printf("status code: %d\n",status);
+		}
 		buf=readline(input);
 	}
 	status = send(s, "d,0,0\n", sizeof("d,0,0\n"), 0);
