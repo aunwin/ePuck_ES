@@ -5,6 +5,11 @@ To does die noch anstehen:
 
 -forken verstehen
 -https://help.github.com/articles/fork-a-repo
+-> forken ist dafür da, aus einem Projekt ein ganz neues zu machen. Brauchen wir also nicht!
+
+das Zeug bekommt man runter in dem man ein neues Git Verzeichnis anlegt, aber nicht über "git init"
+sondern über git clone https://...
+
 
 -Projektziel festlegen
 
