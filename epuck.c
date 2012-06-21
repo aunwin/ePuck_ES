@@ -21,6 +21,8 @@
 #include <stdint.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+//#include <curses.h>
+//#include <term.h>
 
 void usage(const char *argv) {
 	printf("Usage:\n");
