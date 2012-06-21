@@ -1,16 +1,5 @@
-# Compiler
-CC = gcc
-
-# Deklaration der Quelldateien
-SRC = epuck.c
-EXE = epuck
-
-# Flags für den C Compiler
-CFLAGS = -I. -Wall -g -lreadline -lbluetooth
-
-# Targetdefinition all
 all: $(EXE)
-	$(CC) -o $(EXE) $(SRC) $(CFLAGS)
+	gcc -o epuck epuck.c -I. -Wall -g -lreadline -lbluetooth
 
 # Targrgetdefinition clean
 clean:
