@@ -3,23 +3,16 @@ CC = gcc
 
 # Deklaration der Quelldateien
 SRC = epuck.c
-OBJ = $(SRC:%.c=%.o)
 EXE = $(SRC:%.c=%)
 
 # Flags für den C Compiler
-CFLAGS = -I. -Wall -g
-
-# Flags für den Linker
-LDFLAGS = -lbluetooth -lreadline
+CFLAGS = -I. -Wall -g -lreadline -lbluetooth
 
 # Targetdefinition all
 all: $(EXE)
+	$(CC) -o $(EXE) $(SRC) $(CFLAGS)
 
-# Targetdefinition für Doxygen Dokumentation
-docu:
-	doxygen Doxyfile
-
-# Targetdefinition clean
+# Targrgetdefinition clean
 clean:
 	rm -f $(OBJ) $(EXE)
 	rm -rf html
