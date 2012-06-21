@@ -1,0 +1,15 @@
+List of known commands for the ePuck
+	please help to complete
+
+
+- d,X,Y		//drive, left wheel with speed X, right wheel speed Y
+		//Maximum for X,Y = 1000
+
+- f,1		//turning on the flashlight
+- f,0		//turning of the flashlight
+
+- l,X,1		//turning on LED number X  1 <= X <= 8
+- l,X,0		//turning off LED number X
+		
+- l,9,1		//turning on all LEDs
+- l,9,0		//turning off all LEDs

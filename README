@@ -5,4 +5,7 @@ The communication should be via Bluetooth.
 For first instructions about github and how to use it:
 https://help.github.com/articles/create-a-repo
 
+create a new git directory by cloning the remote repos
+git clone http://github.com/aunwin/...
+
 contact at simeon.wiedenmann [at] web de

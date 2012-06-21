@@ -1,11 +1,21 @@
 To does die noch anstehen:
+-----------------------------------------------------------------
 
+-Befehlsliste erstellen
 
+-funktion zum status check extrahieren
+-auslesen, ob/was der ePuck antwortet
+
+-Android GUI mit 2 Reglern basteln
+-Android Bluetooth verbindung
+
+-----------------------------------------------------------------
+Zusatz:
+
+-Bild auslesen und auf Gui mit anzeigen
+-Sound aufnehmen
+-Sound abspielen
+
+-----------------------------------------------------------------
+Erledigt:
 -Flo Zugang verschaffen
-
--neues Git Verzeichnis anlegen vom remote repos aus
-git clone http://github.com/aunwin/...
-
--Projektziel festlegen
-
--los legen
