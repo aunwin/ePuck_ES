@@ -3,7 +3,7 @@ CC = gcc
 
 # Deklaration der Quelldateien
 SRC = epuck.c
-EXE = $(SRC:%.c=%)
+EXE = epuck
 
 # Flags für den C Compiler
 CFLAGS = -I. -Wall -g -lreadline -lbluetooth
