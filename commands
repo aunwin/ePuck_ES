@@ -15,5 +15,4 @@ List of known commands for the ePuck
 - l,9,0		//turning off all LEDs
 
 - t,0	//sounds aus
-- t,1	//spielt sound 1 ab
-- t,5	//spielt sound 5 ab
+- t,X	//spielt sound X ab, wobei 1<=X<=5
