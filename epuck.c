@@ -79,7 +79,7 @@ static int eventloop_joystick (void) {
 
       break;*/
     case SDL_JOYBUTTONUP:
-    	if(event.jbutton.state==1){
+
     	switch (event.jbutton.button){
       	  case 7:
       		  l=0;
@@ -94,7 +94,8 @@ static int eventloop_joystick (void) {
       		  break;
       	  case 4:
       		  r=0;
-    	}break;}break;
+      		  break;
+    	}break;
     case SDL_JOYBUTTONDOWN:
       printf ("Joystick %i Button %i: %i\n",
          event.jbutton.which, event.jbutton.button,
@@ -121,10 +122,16 @@ static int eventloop_joystick (void) {
       		  f=500;
       		  break;
       	  case 2:
+      		sprintf(buf,"t,5\n");
+      		      		      send(s,buf, strlen(buf), 0);
       		break;
       	  case 3:
+      		sprintf(buf,"t,1\n");
+      		      		      send(s,buf, strlen(buf), 0);
       		  break;
       	  case 10:
+      		 sprintf(buf,"t,0\n");
+      		      send(s,buf, strlen(buf), 0);
       		break;
       	  case 11:
       		return 0;
@@ -255,10 +262,10 @@ int main(int argc, char **argv) {
 	    return 1;
 	  }
 	  atexit (SDL_Quit);
-	  if (SDL_SetVideoMode (256, 256, 16, 0) == NULL) {
+	  /*if (SDL_SetVideoMode (256, 256, 16, 0) == NULL) {
 	    printf ("Fehler: %s\n", SDL_GetError ());
 	    return EXIT_FAILURE;
-	  }
+	  }*/
 	  Joystick_Info ();
 	  js = SDL_JoystickOpen (0);
 	  if (js == NULL) {
