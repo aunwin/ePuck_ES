@@ -1,21 +1,27 @@
 To does die noch anstehen:
 -----------------------------------------------------------------
 
--Befehlsliste erstellen
+-Befehlsliste erweitern
 
 -funktion zum status check extrahieren
 -auslesen, ob/was der ePuck antwortet
 
--Android GUI mit 2 Reglern basteln
--Android Bluetooth verbindung
-
+-Dokumentation
+-Präsentationsvortrag
+	-als client an ePuck per rfcomm
+	-befehle senden
+	-Steuerung erklären
+	-Demo vorführen
+	-one touch android
 -----------------------------------------------------------------
 Zusatz:
 
--Bild auslesen und auf Gui mit anzeigen
+-Bild auslesen und auf Konsole mit anzeigen
 -Sound aufnehmen
--Sound abspielen
 
 -----------------------------------------------------------------
 Erledigt:
 -Flo Zugang verschaffen
+-Sound abspielen
+-Android Bluetooth verbindung
+-Android GUI mit 2 Reglern basteln
