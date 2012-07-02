@@ -5,9 +5,11 @@
  * \author Nico Laum <nico.laum@uni-rostock.de>
  * \author Christian Lerche <christian.lerche@uni-rostock.de>
  *
+ * \author Florian Grützmacher <florian.gruetzmacher@uni-rostock.de>
+ * \author Simeon Wiedenmann <simeon.wiedenmann@uni-rostock.de>
  *
+ * modified for ePuck Robot by Florian Grützmacher and Simeon Wiedenmann
  *
- * modified for ePuck !!!!
  */
 
 #include <stdio.h>
@@ -28,83 +30,82 @@
 #include <stdio.h>
 
 static SDL_Joystick *js;
-int l=0;
-int r=0;
-int light=1;
-int leds=0;
-int r2=0;
-int s;
-int f;
-int t=0;
+int l=0;		/* Geschwindigkeit linkes Rad */
+int r=0;		/* Geschwindigkeit rechtes Rad */
+int light=1;	/* front light */
+int leds=0;		/* LEDs */
+int r2=0;		/* Geschwindigkeit rechts mit Geschw.-Faktor, nicht verwendet */
+int s;			/* status variable */
+int f;			/* Geschwindigkeitsfaktor */
+int t=0;		/* Sound Variable??? */
 char* input;
-char* buf[32];
+char* buf;
 static void Joystick_Info (void) {
-  int num_js, i;
-  num_js = SDL_NumJoysticks ();
+  int num_js, i;	/* num_js ist numberOfJoysticks, i Zählvariable */
+  num_js = SDL_NumJoysticks();	/* Rückgabe der Anzahl */
   printf ("Es wurde(n) %d Joystick(s) auf dem System gefunden\n",
      num_js);
   if (num_js == 0) {
     printf ("Es wurde kein Joystick gefunden\n");
     return;
   }
-  /* Informationen zum Joystick */
+
   for (i = 0; i < num_js; i++) {
-    js = SDL_JoystickOpen (i);
+    js = SDL_JoystickOpen (i); /* joystick wird geöffnet, itterativ für alle */
     if (js == NULL) {
       printf ("Kann Joystick %d nicht öffnen\n", i);
     }
     else {
-      printf ("Joystick %d\n", i);
-      printf ("\tName:       %s\n", SDL_JoystickName(i));
-      printf ("\tAxen:       %i\n", SDL_JoystickNumAxes(js));
-      printf ("\tTrackballs: %i\n", SDL_JoystickNumBalls(js));
-      printf ("\tButtons:   %i\n",SDL_JoystickNumButtons(js));
-      SDL_JoystickClose (js);
+    	/* Informationen zum Joystick */
+    	printf ("Joystick %d\n", i);
+    	printf ("\tName:       %s\n", SDL_JoystickName(i));
+    	printf ("\tAxen:       %i\n", SDL_JoystickNumAxes(js));
+    	printf ("\tTrackballs: %i\n", SDL_JoystickNumBalls(js));
+    	printf ("\tButtons:   %i\n",SDL_JoystickNumButtons(js));
+    	SDL_JoystickClose (js); /* JS wird geschlossen */
     }
   }
 }
-static int eventloop_joystick (void) {
-  SDL_Event event;
+static int eventloop(void) {
+  SDL_Event event;	/* event variable*/
+  /* nach event polln und wenn event da, schleife ausführen,
+   * sdl_pollevent erwartet pointer, also mit & addresse geben
+   * */
   while (SDL_PollEvent (&event)) {
     switch (event.type) {
     case SDL_KEYDOWN:
-      if (event.key.keysym.sym == SDLK_ESCAPE) {
-        printf ("ESCAPE für Ende betätigt\n");
-        return 0;
-      }
       break;
     /*case SDL_JOYAXISMOTION:
       printf ("Joystick %d, Achse %d bewegt nach %d\n",
          event.jaxis.which, event.jaxis.axis, event.jaxis.value);
-
+         ---> könne wir nicht benutzen, weil die achsen werte ungleichmäßig gemappt sind
       break;*/
     case SDL_JOYBUTTONUP:
-
+    	/* on button release */
     	switch (event.jbutton.button){
       	  case 7:
-      		  l=0;
+      		  l=0;	/* linkes rad stop */
       		  break;
       	  case 2:
       		  break;
       	  case 6:
-      		  r=0;
+      		  r=0;	/* rechtes rad stop */
       		  break;
       	  case 5:
-      		  l=0;
+      		  l=0; 	/* linkes rad stop */
       		  break;
       	  case 4:
-      		  r=0;
+      		  r=0;	/* rechtes rad stop */
       		  break;
     	}break;
     case SDL_JOYBUTTONDOWN:
-      printf ("Joystick %i Button %i: %i\n",
-         event.jbutton.which, event.jbutton.button,
-         event.jbutton.state);
+    	/* on button pressed */
       	  switch (event.jbutton.button){
       	  case 0:
-      		  f=1000;
+      		  f=1000;	/* schneller gang */
       		  break;
       	  case 8:if(event.jbutton.state==1){
+      		  /* toggle led state */
       		  if(leds==1){
       			  leds=0;
       		  }else{
@@ -112,6 +113,7 @@ static int eventloop_joystick (void) {
       		  }}
       		  break;
       	  case 9:if(event.jbutton.state==1){
+      		  /* toggle light state */
       		  if(light==1){
       			  light=0;
       		  }else{
@@ -119,17 +121,21 @@ static int eventloop_joystick (void) {
       		  }}
       		  break;
       	  case 1:
+      		  /* langsamer gang */
       		  f=500;
       		  break;
       	  case 2:
+      		/* sound 5 abspielen, direkt in der eventloop */
       		sprintf(buf,"t,5\n");
-      		      		      send(s,buf, strlen(buf), 0);
+      		send(s,buf, strlen(buf), 0);
       		break;
       	  case 3:
+      		  /* sound 1 abspielen */
       		sprintf(buf,"t,1\n");
       		      		      send(s,buf, strlen(buf), 0);
       		  break;
       	  case 10:
+      		  /* alle sounds beenden */
       		 sprintf(buf,"t,0\n");
       		      send(s,buf, strlen(buf), 0);
       		break;
@@ -138,39 +144,35 @@ static int eventloop_joystick (void) {
       		break;
       	  case 7:
       		  if(event.jbutton.state==1){
-      			  l=f;
+      			  l=f;	/* links fährt mit Geschw. f */
       		  }else{ l=0;}
       		  break;
       	  case 6:
       		if(event.jbutton.state==1){
-      			r=f;
+      			r=f;	/* rechts fährt mit Geschw. f */
       		}else{ r=0;}
       		break;
       	  case 5:
       		if(event.jbutton.state==1){
-      			l=-1*f;
+      			l=-1*f;	/* links fährt mit Geschw. f rückwärts */
       		}else{ l=0;}
       		break;
       	  case 4:
       		if(event.jbutton.state==1){
       			r=-1*f;
-      		}else{ r=0;
+      		}else{ r=0;	/* rechts fährt mit Geschw. f rückwärts */
       	  }break;}
       break;
     case SDL_QUIT:
       return 0;
       	  }
-    //l2=(int)l*a;
-    //r2=(int)r*a;
-    //printf("accel.-factor:%d",a);
-    //printf("He would send\n");
-      sprintf(buf,"d,%i,%i\n",l,r);
+      sprintf(buf,"d,%i,%i\n",l,r);		/* geschwindigkeit der Räder senden */
       send(s,buf, strlen(buf), 0);
       usleep(1000);
-      sprintf(buf,"l,9,%i\n",leds);
+      sprintf(buf,"l,9,%i\n",leds);		/* led state senden */
       send(s,buf, strlen(buf), 0);
       usleep(1000);
-      sprintf(buf,"f,%i\n",light);
+      sprintf(buf,"f,%i\n",light);		/* frontlight state senden */
       send(s,buf, strlen(buf), 0);
 
 
@@ -178,14 +180,15 @@ static int eventloop_joystick (void) {
   return 1;
 }
 
-void usage(const char *argv) {
-	printf("Usage:\n");
-	printf("\t%s\n", argv);
-}
-
 int main(int argc, char **argv) {
+	buf=malloc(32);		/* buffer speicher alloziieren */
+	const char *bt_destination_address;	//Serveradresse
 
-	const char *bt_destination_address = "10:00:E8:52:BC:49";	//Feste Serveradresse eintragen
+	if(argc>1){
+		bt_destination_address=argv[1];
+	}else{
+		bt_destination_address = "10:00:E8:52:BC:49";	/* standard Adresse des ePuck 1031 */
+	}
 
 	if (strlen(bt_destination_address) != BT_ADDRESS_LENGTH) {
 		fprintf(stderr, "Wrong Bluetooth address format\n");
@@ -227,7 +230,7 @@ int main(int argc, char **argv) {
 			printf("status: %d\n",status);
 		}
 
-	f=500;
+	f=500;		/* standard geschwindigkeit */
 
 	// Command for Drive: 'd,-1000,1000' , where 1000 is maximal value of left and right wheel
 	// Type 'exit' to reset ePuck, close Connection and leave
@@ -238,6 +241,7 @@ int main(int argc, char **argv) {
 
 	send(s, "f,1\n", sizeof("f,1\n"), 0); // flash light, type 'f,0' to switch off
 
+	/* command line implementation, not used because joysticks are more awesome */
 	/*sprintf(input,"command$>");
 	buf=readline(input);
 	while(strncmp(buf,"exit",4)){
@@ -262,38 +266,34 @@ int main(int argc, char **argv) {
 	    return 1;
 	  }
 	  atexit (SDL_Quit);
-	  /*if (SDL_SetVideoMode (256, 256, 16, 0) == NULL) {
-	    printf ("Fehler: %s\n", SDL_GetError ());
-	    return EXIT_FAILURE;
-	  }*/
 	  Joystick_Info ();
 	  js = SDL_JoystickOpen (0);
+
 	  if (js == NULL) {
 	    printf("Konnte Joystick nicht öffnen:%s\n",SDL_GetError());
+	  }else{
+		  printf("Joystick erfolgreich geöffnet\n");
 	  }
-	  printf("Joystick erfolgreich geöffnet\n");
+
 	  while( done ) {
-
-	    done = eventloop_joystick ();
-
-	    SDL_Delay(100);
+		  done = eventloop();
+		  SDL_Delay(100);
 	  }
+
 	  SDL_JoystickClose (js);
-
-	  send(s, "f,0\n", sizeof("f,0\n"), 0);
+	  status = send(s, "d,0,0\n", sizeof("d,0,0\n"), 0);	/* räder auf 0 */
+	  		if (status < 0) {
+	  			perror("error:send()\n");
+	  		} else {
+	  			printf("status code: %d\n",status);
+	  		}
 	  sleep(1);
-	  send(s, "t,0\n", sizeof("t,0\n"), 0);
-	  sleep(1);
-	  send(s, "l,9,0\n", sizeof("l,9,0\n"), 0);
-	status = send(s, "d,0,0\n", sizeof("d,0,0\n"), 0);
-		if (status < 0) {
-			perror("error:send()\n");
-		} else {
-			printf("status code: %d\n",status);
-		}
+	  send(s, "f,0\n", sizeof("f,0\n"), 0);	/* licht aus */
+	  send(s, "t,0\n", sizeof("t,0\n"), 0);	/* sound aus */
+	  send(s, "l,9,0\n", sizeof("l,9,0\n"), 0);/* LEDs aus */
 	printf("bye\n");
-
-	close(s);
+	free(buf);	/* buffer wieder freigeben */
+	close(s);	/* Buetooth-rbindung beenden */
 	return EXIT_SUCCESS;
 
 }
