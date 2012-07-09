@@ -174,10 +174,64 @@ static int eventloop(void) {
       usleep(1000);
       sprintf(buf,"f,%i\n",light);		/* frontlight state senden */
       send(s,buf, strlen(buf), 0);
-
-
   }
   return 1;
+}
+
+void getImage(){
+	buf[0] = -'I';
+	buf[1] = '\0';
+	if (write(s, buf, 2) < 2)
+		printf("Bluetooth sending failed");
+
+	// 3	 byte header followed by raw 40x40 rgb565 image
+	int l=0;
+	int tmp;
+	for (l=0; l < 3203;)
+	{
+		tmp = read(s, buf+l, 3203-l);
+		if (tmp < 1){
+			printf("Bluetooth receiving failed, tmp=%i",tmp);
+			return -1;
+		}
+		l += tmp;
+	}
+
+	// Sanity check: Format must be Mode = 1, Width = 40, Height = 40
+	if (buf[0] != 1 || buf[1] != 40 || buf[2] != 40)
+		printf("Weird epuck camera settings. Reset epuck!\n");
+	printf("buf[0]: %i\n",buf[0]);
+	printf("buf[1]: %i\n",buf[1]);
+	printf("buf[2]: %i\n",buf[2]);
+	system("clear");
+	int i=0,r,g,b;
+	int im[42][42];
+	//printf("A=[");
+	int tlp;
+	for (i = 0; i < 3200; i += 2)
+	{
+		// Decode from rgb565
+		r = buf[i+3]&0xF8;
+		g = ((buf[i+3]&0x07)<<5) | ((buf[i+4]&0xE0)>>3);
+		b = (buf[i+4]&0x1F)<<3;
+		//im[(i+56)/80][(i+56)%80]=(r+b+g)/3;//printf("(%i,%i,%i)",r,g,b);
+		tlp=(r+g+b)/3;
+		if((i-28)%80==0)
+			printf("\n");
+
+		if(tlp<60){
+			printf("$");
+		}else{
+			if(tlp<140){
+				printf("+");
+			}else{
+				printf(".");
+			}
+		}
+
+		//printf("%i,",(r+g+b)/3);
+	}
+	//printf("]");
 }
 
 int main(int argc, char **argv) {
@@ -239,7 +293,7 @@ int main(int argc, char **argv) {
 	sleep(1);
 	send(s, "l,9,0\n", sizeof("l,9,0\n"), 0);
 
-	send(s, "f,1\n", sizeof("f,1\n"), 0); // flash light, type 'f,0' to switch off
+	//send(s, "f,1\n", sizeof("f,1\n"), 0); // flash light, type 'f,0' to switch off
 
 	/* command line implementation, not used because joysticks are more awesome */
 	/*sprintf(input,"command$>");
@@ -275,9 +329,15 @@ int main(int argc, char **argv) {
 		  printf("Joystick erfolgreich geöffnet\n");
 	  }
 
+
+
+
+
+
 	  while( done ) {
-		  done = eventloop();
-		  SDL_Delay(100);
+		  done=eventloop();
+		  SDL_Delay(10);
+		  //getImage();
 	  }
 
 	  SDL_JoystickClose (js);
